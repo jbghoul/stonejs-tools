@@ -23,7 +23,7 @@ var update = {};
  *
  *     {
  *         'quiet': false   // If true: do not output logs
- *         'removeUnused': false // If true: remove messages in .po files that are not in template .pot
+ *         'remove-unused': false // If true: remove messages in .po files that are not in template .pot
  *     }
  *
  * @method main
@@ -120,7 +120,7 @@ update.updatePo = function(poData, potData, options) {
         }
     }
 
-    if (options.removeUnused) {
+    if (options["remove-unused"]) {
         for (msgctxt in po.translations) {
             if (pot.translations[msgctxt] === undefined) {
                 delete po.translations[msgctxt];
