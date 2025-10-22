@@ -24,7 +24,7 @@ describe("stonejs update:", function() {
             });
 
             describe("update with option to remove unused messaged", function() {
-                expect(update.updatePo(poData, potData, { "remove-unused": true }))
+                expect(update.updatePo(poData, potData, { "remove-obsolete": true }))
                     .to.contain('msgstr "traductible 1"')
                     .and.to.contain('msgid "translatable 5"')
                     .and.to.contain('msgid "escaped @ 7"')
@@ -110,7 +110,7 @@ describe("stonejs update:", function() {
         });
 
         it("updates po file from a pot, with option to remove unused", function(done) {
-            update.main([outputPoFile], potFile, { quiet: true, "remove-unused": true }, function() {
+            update.main([outputPoFile], potFile, { quiet: true, "remove-obsolete": true }, function() {
                 var poData = fs.readFileSync(outputPoFile).toString();
                 expect(poData)
                     .to.contain('msgstr "traductible 1"')

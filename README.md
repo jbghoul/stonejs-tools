@@ -82,13 +82,13 @@ Then you can update your translation files (`.po`) using the `stonejs update` co
 The available options are:
 
 * `--quiet`, `-q`: do not output progress log to stdout
-* `--remove-unused`: remove from translation files (`.po`) messages that are not present in the source translation template (`.pot`)
+* `--remove-obsolete`: remove from translation files (`.po`) messages that are not present in the source translation template (`.pot`)
 
-Example:
+Examples:
 
     stonejs update locales/*.po locales/catalog.pot
 
-    stonejs update --remove-unused locales/*.po locales/catalog.pot
+    stonejs update --remove-obsolete locales/*.po locales/catalog.pot
 
 
 ## Building Translations
