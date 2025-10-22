@@ -21,8 +21,16 @@ describe("stonejs update:", function() {
                     .and.to.contain('msgid "translatable 5"')
                     .and.to.contain('msgid "escaped @ 7"')
                     .and.to.contain('msgid "duplicated"');
-                    //.and.to.contain('#~ msgid "removed 1"')
-                    //.and.not.to.contain('msgid "removed 1"');
+            });
+
+            describe("update with option to remove obsolete messages", function() {
+                expect(update.updatePo(poData, potData, { "remove-obsolete": true }))
+                    .to.contain('msgstr "traductible 1"')
+                    .and.to.contain('msgid "translatable 5"')
+                    .and.to.contain('msgid "escaped @ 7"')
+                    .and.to.contain('msgid "duplicated"')
+                    .and.not.to.contain('#~ msgid "removed 1"')
+                    .and.not.to.contain('msgid "removed 1"');
             });
         });
 
@@ -97,8 +105,20 @@ describe("stonejs update:", function() {
                     .and.to.contain('msgid "translatable 5"')
                     .and.to.contain('msgid "escaped @ 7"')
                     .and.to.contain('msgid "duplicated"');
-                    //.and.to.contain('#~ msgid "removed 1"')
-                    //.and.not.to.contain('msgid "removed 1"');
+                done();
+            });
+        });
+
+        it("updates po file from a pot, with option to remove obsolete messages", function(done) {
+            update.main([outputPoFile], potFile, { quiet: true, "remove-obsolete": true }, function() {
+                var poData = fs.readFileSync(outputPoFile).toString();
+                expect(poData)
+                    .to.contain('msgstr "traductible 1"')
+                    .and.to.contain('msgid "translatable 5"')
+                    .and.to.contain('msgid "escaped @ 7"')
+                    .and.to.contain('msgid "duplicated"')
+                    .and.not.to.contain('#~ msgid "removed 1"')
+                    .and.not.to.contain('msgid "removed 1"');
                 done();
             });
         });

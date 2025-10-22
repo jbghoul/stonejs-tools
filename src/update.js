@@ -23,13 +23,14 @@ var update = {};
  *
  *     {
  *         'quiet': false   // If true: do not output logs
+ *         'remove-obsolete': false // If true: remove messages in .po files that are not in template .pot
  *     }
  *
  * @method main
  * @static
  * @param {Array} poFiles the .po files to update (can contain glob pattern)
  * @param {String} template the .pot file
- * @param {Object} options additional options (optional, default: see above)
+ * @param {Object} [options] additional options (optional, default: see above)
  * @param {Function} callback function called when everything is done (optional)
  */
 update.main = function(poFiles, template, options, callback) {
@@ -62,7 +63,7 @@ update.main = function(poFiles, template, options, callback) {
                     helpers.warn("    /!\\ Skipped!", options);
                     continue;
                 }
-                poData = update.updatePo(poData, potData);
+                poData = update.updatePo(poData, potData, options);
                 fs.writeFileSync(files[i], poData, {encoding: "utf-8"});
             }
             callback();
@@ -77,17 +78,21 @@ update.main = function(poFiles, template, options, callback) {
  * @static
  * @param {String} poData the po file content
  * @param {String} potData the pot file content
+ * @param {Object} [options] additional options (optional, default: see above)
  * @return {String} the update po data
  */
-update.updatePo = function(poData, potData) {
+update.updatePo = function(poData, potData, options) {
+    options = options || {};
     var pot = gettextParser.po.parse(potData);
     var po = gettextParser.po.parse(poData);
 
     po.headers["po-revision-date"] = helpers.dateFormat(new Date());
     var nplural = helpers.nplurals(po.headers["plural-forms"]);
+    var msgctxt;
+    var msgid;
 
-    for (var msgctxt in pot.translations) {
-        for (var msgid in pot.translations[msgctxt]) {
+    for (msgctxt in pot.translations) {
+        for (msgid in pot.translations[msgctxt]) {
             if (msgid === "") continue;
             if (po.translations[msgctxt] === undefined) {
                 po.translations[msgctxt] = {};
@@ -110,6 +115,20 @@ update.updatePo = function(poData, potData) {
                         msgstr.push(po.translations[msgctxt][msgid].msgstr[i] || "");
                     }
                     po.translations[msgctxt][msgid].msgstr = msgstr;
+                }
+            }
+        }
+    }
+
+    if (options["remove-obsolete"]) {
+        for (msgctxt in po.translations) {
+            if (pot.translations[msgctxt] === undefined) {
+                delete po.translations[msgctxt];
+                continue;
+            }
+            for (msgid in po.translations[msgctxt]) {
+                if (pot.translations[msgctxt][msgid] === undefined) {
+                    delete po.translations[msgctxt][msgid];
                 }
             }
         }
