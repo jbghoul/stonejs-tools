@@ -130,6 +130,10 @@ Want to support this project?
 
   * Nothing yet ;)
 
+* **v1.6.0:**
+
+  * feat(update): Added an option to remove obsolete translations (#56, @jbghoul)
+
 * **v1.5.0:**
 
   * Added support of string with context (`pgettext`, `npgettext`,...) (@Krenodeno, #32)
