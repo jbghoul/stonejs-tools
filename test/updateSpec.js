@@ -23,7 +23,7 @@ describe("stonejs update:", function() {
                     .and.to.contain('msgid "duplicated"');
             });
 
-            describe("update with option to remove unused messaged", function() {
+            describe("update with option to remove obsolete messages", function() {
                 expect(update.updatePo(poData, potData, { "remove-obsolete": true }))
                     .to.contain('msgstr "traductible 1"')
                     .and.to.contain('msgid "translatable 5"')
@@ -109,7 +109,7 @@ describe("stonejs update:", function() {
             });
         });
 
-        it("updates po file from a pot, with option to remove unused", function(done) {
+        it("updates po file from a pot, with option to remove obsolete messages", function(done) {
             update.main([outputPoFile], potFile, { quiet: true, "remove-obsolete": true }, function() {
                 var poData = fs.readFileSync(outputPoFile).toString();
                 expect(poData)
